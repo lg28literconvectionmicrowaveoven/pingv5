@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Test & validate submission
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: uv sync --no-default-groups --group test
+
+      - name: Run tests
+        run: uv run pytest
+
+      - name: Validate submission for every class
+        run: |
+          for cls in medusa aristotle francesca helen_of_troy cerberus_jr; do
+            uv run python scripts/validate_submission.py examples/my_harness.py --class "$cls"
+          done
