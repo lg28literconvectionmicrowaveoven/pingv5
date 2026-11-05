@@ -1,5 +1,4 @@
-"""Single-file Ping submission. Runtime state is RAM-only; set NETID before joining.
-
+"""
 Strategy: strongest-modifier encounter actions, explicit vendetta attempts, and
 conservative sampled one-round survival comparisons for emergency support.
 The tactical model is an approximation, not the organisers' engine.
