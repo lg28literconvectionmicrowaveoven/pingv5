@@ -210,11 +210,13 @@ class Aa893Harness(Harness):
     # ================================================================== nemesis
 
     def _nemesis_posterior(self, window_end: float) -> float:
-        if self.vendetta_done or self.nemesis_passed or self.nemesis is None or self.event is None:
+        if self.vendetta_done or self.nemesis is None or self.event is None:
             return 0.0
         k = self._rounds_left()
         if k <= 1:
-            return 1.0                      # every boss appears once: the last one must be ours
+            return 1.0      # last boss: always try (an earlier "match" may have been wrong)
+        if self.nemesis_passed:
+            return 0.0
         boss = self.event.boss
         score = max(overlap(boss.description, self.nemesis.description),
                     overlap(boss.name + " " + boss.description, self.nemesis.description))
